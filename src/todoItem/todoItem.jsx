@@ -1,21 +1,41 @@
-import React, {useState, useContext} from "react";
-import "./todoItem.scss";
+import React, {useState} from "react";
 import {db} from "../firebaseConfige";
 import ClearIcon from '@material-ui/icons/Clear';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
-import grey from '@material-ui/core/colors/grey';
-import { ThemeContext } from "../App";
-import {themes} from "../themes";
+import styled from "styled-components";
+
+const TodoDiv = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border-bottom: solid 1px;
+    padding: 10px 0 10px 0;
+`
+const TodoTitle = styled.p`
+        text-align: start; 
+        margin: 0 1vw 0 1vw;
+        font-size: 2vw;
+        width: 90%;
+        cursor: text;
+`
+
+const TodoTextArea = styled.textarea`
+    font-family: 'Work Sans', sans-serif;
+    background-color: rgb(48, 19, 122);
+    color: white;
+    width: 90%;
+    outline: none;
+    border: solid 1px;
+    margin: 0 1vw 0 1vw;
+    border-radius: 5px;
+    background-color: ${p => p.theme.BackgroundColor};
+`
+
 
 const TodoItem = ({todo, done, id, index}) => {
-
-    const Theme = useContext(ThemeContext)
-
-    const light = themes.light;
-    const dark = themes.dark;
 
     const [update, setUpdate] = useState(false);
     const [toUpdate, setToUpdate] = useState("");
@@ -40,56 +60,47 @@ const TodoItem = ({todo, done, id, index}) => {
 
     const size = 35
     return(
-        <div 
-        className="todoItem" 
+        <TodoDiv 
         key={index.toString()}
         style={{
-            borderColor: Theme ? dark.color1 : light.color1,
             opacity: done ? "0.3" : "1"
         }}
         >
             {done ? 
             <CheckCircleIcon 
             onClick={() => doneTodo()} 
-            style={{ color: Theme ? "white" : grey[900], fontSize: size, cursor: "pointer"}} />
+            style={{ color: `${p => p.theme.UIcolor}` , fontSize: size, cursor: "pointer"}} />
             :
             <CheckCircleOutlineIcon 
             onClick={() => doneTodo()} 
-            style={{ color: Theme ? "white" : grey[900], fontSize: size, cursor: "pointer"}} />
+            style={{ color: `${p => p.theme.UIcolor}`, fontSize: size, cursor: "pointer"}} />
             }
             {update ?
-            <textarea
-            style={{
-                color: Theme ? dark.color1 : light.color1,
-                borderColor: Theme ? dark.color1 : light.color1,
-                backgroundColor: Theme ? dark.background : light.background
-            }}
+            <TodoTextArea
             maxlength="30"
             rows="1"
             onChange={e => setToUpdate(e.target.value)}
-            ></textarea> 
+            ></TodoTextArea> 
             : 
-            <p 
+            <TodoTitle
             onClick={() => setUpdate(!update)} 
-            className="todoTitle"
-            style={{color: Theme ? dark.color1 : light.color1 }}
-            >{todo}</p>}
+            >{todo}</TodoTitle>}
             
             { update ? 
             <DoneIcon 
-            style={{ color: Theme ? "white" : grey[900], fontSize: size, cursor: "pointer" }} 
+            style={{ color: `${p => p.theme.UIcolor}`, fontSize: size, cursor: "pointer" }} 
             onClick={() => updateTodo()} />
             :
             <EditIcon 
-            style={{ color: Theme ? "white" : grey[900], fontSize: size, cursor: "pointer" }} 
+            style={{ color: `${p => p.theme.UIcolor}`, fontSize: size, cursor: "pointer" }} 
             onClick={() => setUpdate(true)}/>
             }
             <ClearIcon 
-            style={{ color: Theme ? "white" : grey[900], fontSize: size, cursor: "pointer" }} 
+            style={{ color: `${p => p.theme.UIcolor}`, fontSize: size, cursor: "pointer" }} 
             onClick={() => deleteTodo()} 
-            className="done" />
+            />
 
-        </div>
+        </TodoDiv>
 
     )
 }
